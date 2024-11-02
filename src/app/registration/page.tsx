@@ -6,7 +6,7 @@ import { Typography, Input, Button } from "@material-tailwind/react";
 import { initializeApp } from "firebase/app";
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { collection, addDoc, getFirestore, getDocs, query, where} from "firebase/firestore";
-import { AuthContext } from "../components/auth/auth";
+import { AuthContext } from "@/app/components/auth/auth";
 import { firebaseConfig} from "@/app/constants/firebaseconstants";
 
 const app = initializeApp(firebaseConfig);
@@ -27,7 +27,7 @@ export default function RegistrationPage() {
     const db = getFirestore(app);
     console.log("Saving the details")
     console.log(username)
-    if(username && username === ""){
+    if(username.trim() === ""){
       return
     }
     const userDetailsToSave = {
@@ -85,16 +85,6 @@ export default function RegistrationPage() {
             />{" "}
             Register using google
           </Button>
-          <Typography
-            variant="small"
-            color="gray"
-            className="!mt-4 text-center font-normal"
-          >
-            Not registered?{" "}
-            <a href="#" className="font-medium text-gray-900">
-              Create account
-            </a>
-          </Typography>
         </form>
       </div>
     </section>

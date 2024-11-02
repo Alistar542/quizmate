@@ -1,14 +1,13 @@
 "use client";
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { useRouter } from 'next/navigation'
 import { Typography, Input, Button } from "@material-tailwind/react";
 import { EyeSlashIcon, EyeIcon } from "@heroicons/react/24/solid";
 
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { collection, addDoc, getFirestore, getDocs, query, where} from "firebase/firestore";
-import { AuthContext } from "../components/auth/auth";
+import { AuthContext } from "@/app/components/auth/auth";
 import { firebaseConfig} from "@/app/constants/firebaseconstants";
 
 const app = initializeApp(firebaseConfig);
@@ -27,14 +26,24 @@ export default function LoginPage() {
     const docSnap = await getDocs(q);
     if(docSnap.docs.length >= 1){
       docSnap.forEach((doc) => {
+        console.log(doc.data())
         setCurrentUser(doc.data());
       });
-      router.push("/home")
+      // router.push("/home")
     }else {
       router.push("/registration")
     }
     
   }
+
+  useEffect(() => {
+    if(currentUser){
+      console.log("The user details are present herer")
+      console.log(currentUser)
+      router.push("/home")
+    }
+  },[currentUser])
+
 
   const signInFn = ()=>{
     const auth = getAuth();

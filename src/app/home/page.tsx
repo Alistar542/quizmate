@@ -8,7 +8,7 @@ import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { collection, addDoc, getFirestore, getDocs, query, where } from "firebase/firestore";
-import { AuthContext } from "../components/auth/auth";
+import { AuthContext } from "@/app/components/auth/auth";
 import { firebaseConfig} from "@/app/constants/firebaseconstants";
 
 
@@ -17,39 +17,51 @@ const provider = new GoogleAuthProvider();
 
 export default function HomePage() {
 
-  const { currentUser } = useContext(AuthContext);
+  const { currentUser, setCurrentUser } = useContext(AuthContext);
   const [questionText, setQuestionText] = useState('');
   const [ questionDoc, setQuestionDoc ] = useState({});
 
-  async function getUserQuestionInformation() {
-    const db = getFirestore(app);
-    const q = query(collection(db, "questions"), where("questionId", "==", currentUser.questionId));
-    const docSnap = await getDocs(q);
-    if(docSnap.docs.length >= 1){
-      docSnap.forEach((doc) => {
-        console.log(doc.id, " => ", doc.data());
-        setQuestionText(doc.data().question);
-        setQuestionDoc(doc.data())
-      });
-    }
-    
-  }
 
-  const loadDataOnlyOnce = () => {
-    getUserQuestionInformation()
-    // setQuestionText(null)
-  }
+
+  // const loadDataOnlyOnce = () => {
+  //   getUserQuestionInformation()
+  //   // setQuestionText(null)
+  // }
 
   // This function will called only once
   useEffect(() => {
-      loadDataOnlyOnce();
-  }, [])
+    async function getUserQuestionInformation() {
+      const db = getFirestore(app);
+      console.log("User details from context")
+      console.log(currentUser)
+      const q = query(collection(db, "questions"), where("questionId", "==", currentUser.questionId));
+      const docSnap = await getDocs(q);
+      if(docSnap.docs.length >= 1){
+        docSnap.forEach((doc) => {
+          console.log(doc.id, " => ", doc.data());
+          setQuestionText(doc.data().question);
+          setQuestionDoc(doc.data())
+        });
+      }
+      
+    }
+    console.log("Inside use effect")
+    console.log(currentUser)
+    if (currentUser) {
+      getUserQuestionInformation();
+    }
+  }, [currentUser])
+
+  // useEffect(() => {
+  //   console.log("Page load")
+  //   console.log(currentUser)
+  // },[])
 
   return (
     <section className="grid text-center h-screen items-center p-8">
       <div>
         <Typography variant="h3" className="mb-2">
-          Question no. {currentUser.questionId}
+          Question no. {currentUser && currentUser.questionId}
         </Typography>
 
         <Typography variant="h5" className="mb-2">
