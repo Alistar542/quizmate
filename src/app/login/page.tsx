@@ -38,7 +38,7 @@ export default function LoginPage() {
 
   useEffect(() => {
     if(currentUser){
-      console.log("The user details are present herer")
+      console.log("The user details are present here")
       console.log(currentUser)
       router.push("/home")
     }
