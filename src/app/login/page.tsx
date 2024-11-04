@@ -26,8 +26,10 @@ export default function LoginPage() {
     const docSnap = await getDocs(q);
     if(docSnap.docs.length >= 1){
       docSnap.forEach((doc) => {
-        console.log(doc.data())
-        setCurrentUser(doc.data());
+        let userFromDb = {userId:doc.id,...doc.data()}
+        // userFromDb['userId'] = doc.id;
+        console.log(userFromDb)
+        setCurrentUser(userFromDb);
       });
       // router.push("/home")
     }else {

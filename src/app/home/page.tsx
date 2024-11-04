@@ -32,21 +32,16 @@ export default function HomePage() {
   useEffect(() => {
     async function getUserQuestionInformation() {
       const db = getFirestore(app);
-      console.log("User details from context")
-      console.log(currentUser)
       const q = query(collection(db, "questions"), where("questionId", "==", currentUser.questionId));
       const docSnap = await getDocs(q);
       if(docSnap.docs.length >= 1){
         docSnap.forEach((doc) => {
-          console.log(doc.id, " => ", doc.data());
           setQuestionText(doc.data().question);
           setQuestionDoc(doc.data())
         });
       }
       
     }
-    console.log("Inside use effect")
-    console.log(currentUser)
     if (currentUser) {
       getUserQuestionInformation();
     }
@@ -58,7 +53,7 @@ export default function HomePage() {
   // },[])
 
   return (
-    <section className="grid text-center h-screen items-center p-8">
+    <section className="grid text-center h-full items-center p-8">
       <div>
         <Typography variant="h3" className="mb-2">
           Question no. {currentUser && currentUser.questionId}
