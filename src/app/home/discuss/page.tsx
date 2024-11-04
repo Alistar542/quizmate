@@ -41,10 +41,10 @@ export default function DiscussPage() {
                 message: message,
                 messageTimestamp: Date.now()
             }
+            setMessage('')
             const docRef = await addDoc(collection(db, "messages"), messageDetailsToSave);
             console.log("Saved the message")
             console.log(docRef)
-            setMessage('')
         }
     }
 
