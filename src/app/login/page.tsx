@@ -32,10 +32,10 @@ export default function LoginPage() {
   const [passwordShown, setPasswordShown] = useState(false);
   const togglePasswordVisiblity = () => setPasswordShown((cur) => !cur);
   const { currentUser, setCurrentUser } = useContext(AuthContext);
-  const [userEmail, setUserEmail] = useState('')
-  const [userPassword, setUserPassword] = useState('')
+  // const [userEmail, setUserEmail] = useState('')
+  // const [userPassword, setUserPassword] = useState('')
   const router = useRouter()
-  const {login} = useContext(AuthContext)
+  // const {login} = useContext(AuthContext)
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(!open);
   const [modalMessage, setModalMessage] = useState('')
@@ -43,41 +43,18 @@ export default function LoginPage() {
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors, isSubmitting },
     reset
   } = useForm<Inputs>()
-
-  async function getUserDetails(userInfo: any) {
-    const db = getFirestore(app);
-    const q = query(collection(db, "users"), where("email", "==", userInfo.email));
-    const docSnap = await getDocs(q);
-
-
-    if (docSnap.docs.length >= 1) {
-      docSnap.forEach((doc) => {
-        let userFromDb = { userId: doc.id, ...doc.data() }
-        // userFromDb['userId'] = doc.id;
-        console.log(userFromDb)
-        setCurrentUser(userFromDb);
-      });
-      // router.push("/home")
-    } else {
-      router.push("/registration")
-    }
-
-  }
 
 
   useEffect(() => {
     const auth = getAuth();
     // Listen for Firebase auth state changes
     const unsubscribe = auth.onAuthStateChanged(user => {
-      console.log("auth changed")
-      console.log(user)
-      // setCurrentUser(user);
       if(user){
-        getUserDetails(user)
+        console.log("auth changed", user)
+        getUserDetailsFromFirebase(user)
       }
     });
 
@@ -88,50 +65,18 @@ export default function LoginPage() {
   useEffect(() => {
     if (currentUser) {
       console.log("The user details are present")
-      console.log(currentUser)
       router.push("/home")
     }
   }, [currentUser])
 
 
-  const signInFn = () => {
-    const auth = getAuth();
-    signInWithPopup(auth, provider)
-      .then((result) => {
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        const token = credential && credential.accessToken;
-        const user = result.user;
-        getUserDetails(user)
-      }).catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        const email = error.customData.email;
-        const credential = GoogleAuthProvider.credentialFromError(error);
-      });
-  }
-
-  const loginFn = async () => {
-    try {
-      await login(userEmail, userPassword)
-      // Redirect or show success message
-    } catch (error) {
-      console.error("Failed to log in", error);
-    }
-  }
-
   const onSubmit: SubmitHandler<Inputs> = async function (data) {
-    console.log(data)
     const auth = getAuth();
     return signInWithEmailAndPassword(auth, data.email, data.password)
       .then((userCredential) => {
         // Signed in 
         const user = userCredential.user;
-        console.log(user)
         return getUserDetailsFromFirebase(user)
-        .then((data) => {
-          console.log("user details found")
-          console.log(data)
-        })
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -151,7 +96,11 @@ export default function LoginPage() {
     if (docSnap.docs.length >= 1) {
       docSnap.forEach((doc) => {
         let userFromDb = { userId: doc.id, ...doc.data() }
-        console.log(userFromDb)
+        console.log("user from db",userFromDb)
+        userFromDb
+        if(userFromDb) {
+          setCurrentUser(userFromDb);
+        }
       });
     } else {
       return null;
@@ -188,6 +137,7 @@ export default function LoginPage() {
           </div>
           <Button color="gray" size="lg"
             className="mt-6 flex h-12 items-center justify-center gap-2"
+            disabled={isSubmitting}
             fullWidth type="submit">
             {isSubmitting ? "Submitting..." :"Login"}
           </Button>
