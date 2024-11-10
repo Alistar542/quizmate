@@ -1,13 +1,12 @@
-// components/withPrivateRoute.js
-"use client"
+"use client";
 import { useRouter } from 'next/navigation';
 import { AuthContext } from '@/app/components/auth/auth';
-import { useEffect, useContext } from 'react';
+import { useEffect, useContext, ComponentType } from 'react';
 
-export default function withPrivateRoute(WrappedComponent) {
-  return (props) => {
-    const { currentUser } = useContext(AuthContext);
+const WithPrivateRoute = <P extends object>(WrappedComponent: ComponentType<P>) => {
+  const HOC = (props:P) => {
     const router = useRouter();
+    const { currentUser } = useContext(AuthContext);
 
     useEffect(() => {
       if (!currentUser) {
@@ -22,4 +21,11 @@ export default function withPrivateRoute(WrappedComponent) {
 
     return <WrappedComponent {...props} />;
   };
+
+  // Set display name for better debugging
+  HOC.displayName = `WithPrivateRoute(${WrappedComponent.displayName || WrappedComponent.name || 'Component'})`;
+
+  return HOC;
 };
+
+export default WithPrivateRoute;

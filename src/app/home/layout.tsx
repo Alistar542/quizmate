@@ -9,7 +9,7 @@ import {
     Card,
 } from "@material-tailwind/react";
 import Link from 'next/link';
-import withPrivateRoute from "@/app/components/auth/privateroute";
+import WithPrivateRoute from "@/app/components/auth/privateroute";
 import { AuthContext } from "../components/auth/auth";
 
 function StickyNavbar ({ children }: { children: React.ReactNode }) {
@@ -157,4 +157,4 @@ function StickyNavbar ({ children }: { children: React.ReactNode }) {
     );
 }
 
-export default withPrivateRoute(StickyNavbar)
+export default WithPrivateRoute(StickyNavbar)
