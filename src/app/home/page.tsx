@@ -6,7 +6,7 @@ import { EyeSlashIcon, EyeIcon } from "@heroicons/react/24/solid";
 
 import { initializeApp } from "firebase/app";
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
-import { collection, addDoc, getFirestore, getDocs, query, where } from "firebase/firestore";
+import { collection, addDoc, getFirestore, getDocs, query, where,updateDoc, doc } from "firebase/firestore";
 import { AuthContext } from "@/app/components/auth/auth";
 import { firebaseConfig} from "@/app/constants/firebaseconstants";
 import {
@@ -67,7 +67,6 @@ export default function HomePage() {
       const q = query(collection(db, "questions"), where("questionId", "==", currentUser.questionId), where("answer", "==", userAnswerS));
       const docSnap = await getDocs(q);
       if(docSnap.docs.length >= 1){
-        console.log("correct answer")
         docSnap.forEach((doc) => {
           // setQuestionText(doc.data().question);
           // setQuestionDoc(doc.data())
@@ -75,7 +74,16 @@ export default function HomePage() {
         });
         // setShowResults(true)
         handleOpen()
-        // fetch the next question
+        setUserAnswer('')
+
+        const userRef = doc(db, "users", currentUser.userId);
+
+        await updateDoc(userRef, {
+          questionId: currentUser.questionId +1
+        })
+
+        setCurrentUser({...currentUser, "questionId":currentUser.questionId+1})
+
 
       }else {
         console.log("wrong answer")
@@ -125,8 +133,7 @@ export default function HomePage() {
 
         <Dialog open={open} handler={handleOpen}>
         <DialogHeader>Correct answer</DialogHeader>
-        <DialogBody>
-          Adichu mole
+        <DialogBody className="flex justify-center">
           <img
               src={`https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExejRhNTV1bmw5MmJzenJlZjE0ODZwNnhxZ3FmYzdrcm8zaXlqNXcwciZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/efNqSO4TuhKlYHyUa2/giphy.gif`}
               alt="google"
@@ -134,7 +141,7 @@ export default function HomePage() {
             />
         </DialogBody>
         <DialogFooter>
-          <Button variant="gradient" color="green" onClick={handleOpen}>
+          <Button variant="gradient" color="gray" onClick={handleOpen}>
             <span>OK</span>
           </Button>
         </DialogFooter>

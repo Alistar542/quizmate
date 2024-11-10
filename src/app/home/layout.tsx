@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useContext } from "react";
 import {
     Navbar,
     Collapse,
@@ -9,8 +9,10 @@ import {
     Card,
 } from "@material-tailwind/react";
 import Link from 'next/link';
+import withPrivateRoute from "@/app/components/auth/privateroute";
+import { AuthContext } from "../components/auth/auth";
 
-export default function StickyNavbar({ children }: { children: React.ReactNode }) {
+function StickyNavbar ({ children }: { children: React.ReactNode }) {
     const [openNav, setOpenNav] = React.useState(false);
 
     React.useEffect(() => {
@@ -19,6 +21,17 @@ export default function StickyNavbar({ children }: { children: React.ReactNode }
             () => window.innerWidth >= 960 && setOpenNav(false),
         );
     }, []);
+
+    const { logout } = useContext(AuthContext);
+
+  const handleLogout = async () => {
+    try {
+        console.log("Clicked logout")
+      await logout();
+    } catch (error) {
+      console.error("Failed to log out", error);
+    }
+  };
 
     const navList = (
         <ul className="mt-2 mb-4 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6">
@@ -81,8 +94,9 @@ export default function StickyNavbar({ children }: { children: React.ReactNode }
                                 variant="gradient"
                                 size="sm"
                                 className="hidden lg:inline-block"
+                                onClick={handleLogout}
                             >
-                                <span>Profile</span>
+                                <span>Logout</span>
                             </Button>
                         </div>
                         <IconButton
@@ -142,3 +156,5 @@ export default function StickyNavbar({ children }: { children: React.ReactNode }
         </div>
     );
 }
+
+export default withPrivateRoute(StickyNavbar)
