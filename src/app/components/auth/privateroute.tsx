@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import { AuthContext } from '@/app/components/auth/auth';
 import { useEffect, useContext } from 'react';
 
-const withPrivateRoute = (WrappedComponent) => {
+export default function withPrivateRoute(WrappedComponent) {
   return (props) => {
     const { currentUser } = useContext(AuthContext);
     const router = useRouter();
@@ -23,5 +23,3 @@ const withPrivateRoute = (WrappedComponent) => {
     return <WrappedComponent {...props} />;
   };
 };
-
-export default withPrivateRoute;
