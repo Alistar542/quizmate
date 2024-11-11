@@ -44,6 +44,7 @@ export default function HomePage() {
 
   // This function will called only once
   useEffect(() => {
+    console.log("inside the current user useffect")
     async function getUserQuestionInformation() {
       const db = getFirestore(app);
       const q = query(collection(db, "questions"), where("questionId", "==", currentUser.questionId));
@@ -56,10 +57,31 @@ export default function HomePage() {
       }
       
     }
-    if (currentUser) {
+    if (currentUser.questionId) {
       getUserQuestionInformation();
     }
   }, [currentUser])
+
+  useEffect(() => {
+    console.log("inside the main useffect")
+    async function getUserDetailsFromFirebase() {
+      const db = getFirestore(app);
+      const q = query(collection(db, "users"), 
+        where("email", "==", currentUser?.email),
+      );
+      const docSnap = await getDocs(q);
+      if (docSnap.docs.length >= 1) {
+        docSnap.forEach((doc) => {
+          let userFromDb = { userId: doc.id, ...doc.data() }
+          console.log("user from db",userFromDb)
+          if(userFromDb) {
+            setCurrentUser(userFromDb);
+          }
+        });
+      }
+    }
+    getUserDetailsFromFirebase();
+  }, [])
 
   async function checkAnswerFn (userAnswerS : string){
     const db = getFirestore(app);

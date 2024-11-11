@@ -34,6 +34,8 @@ export default function LoginPage() {
   const { currentUser, setCurrentUser } = useContext(AuthContext);
   // const [userEmail, setUserEmail] = useState('')
   // const [userPassword, setUserPassword] = useState('')
+  const [loading, setLoading] = useState(true);
+  const [authenticated, setAuthenticated] = useState(false);
   const router = useRouter()
   // const {login} = useContext(AuthContext)
   const [open, setOpen] = useState(false);
@@ -49,25 +51,37 @@ export default function LoginPage() {
 
 
   useEffect(() => {
+    console.log("calling use effect")
     const auth = getAuth();
+    console.log(auth)
+    if (auth.currentUser) {
+      console.log("already authenticated in use effect")
+      setCurrentUser(auth.currentUser);
+      router.replace("/home");
+      return;
+    }
     // Listen for Firebase auth state changes
-    const unsubscribe = auth.onAuthStateChanged(user => {
+    const unsubscribe= auth.onAuthStateChanged(user => {
       if(user){
-        console.log("auth changed", user)
-        getUserDetailsFromFirebase(user)
+        console.log("auth changed in use effect", user)
+        setAuthenticated(true);
+        setCurrentUser(user)
+        router.replace("/home")
+        // getUserDetailsFromFirebase(user)
       }
+      setLoading(false);
     });
 
     // Clean up subscription on unmount
-    return unsubscribe;
+    return () => unsubscribe();
   }, []);
 
-  useEffect(() => {
-    if (currentUser) {
-      console.log("The user details are present")
-      router.push("/home")
-    }
-  }, [currentUser])
+  // useEffect(() => {
+  //   if (currentUser) {
+  //     console.log("The user details are present")
+  //     router.push("/home")
+  //   }
+  // }, [currentUser])
 
 
   const onSubmit: SubmitHandler<Inputs> = async function (data) {
@@ -97,9 +111,9 @@ export default function LoginPage() {
       docSnap.forEach((doc) => {
         let userFromDb = { userId: doc.id, ...doc.data() }
         console.log("user from db",userFromDb)
-        userFromDb
         if(userFromDb) {
           setCurrentUser(userFromDb);
+          router.push('/home')
         }
       });
     } else {
@@ -107,7 +121,23 @@ export default function LoginPage() {
     }
   }
 
+  if(loading){
+    return (
+      <section className="grid text-center h-screen items-center p-8">
+        <div>Loading ... </div>
+      </section>
+    )
+  }
+  if (authenticated) {
+    return (
+      <section className="grid text-center h-screen items-center p-8">
+        <div>Redirecting ... </div>
+      </section>
+    )
+  }
+
   return (
+    
     <section className="grid text-center h-screen items-center p-8">
       <div>
         <Typography variant="h3" className="mb-2">
