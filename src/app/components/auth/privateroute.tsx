@@ -71,7 +71,11 @@ const WithPrivateRoute = <P extends object>(WrappedComponent: ComponentType<P>) 
 
     // Only render the component if the user is authenticated
     if (!currentUser) {
-      return null; // Or a loading spinner if you prefer
+      return (
+        <section className="grid text-center h-screen items-center p-8">
+          <div>Loading ... </div>
+        </section>
+      )
     }
 
     return <WrappedComponent {...props} />;
