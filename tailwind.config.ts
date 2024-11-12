@@ -16,5 +16,6 @@ const config: Config = withMT({
     },
   },
   plugins: [],
+  darkMode:"media"
 });
 export default config;

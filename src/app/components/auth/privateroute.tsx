@@ -6,6 +6,7 @@ import { getAuth } from "firebase/auth";
 import { collection, getFirestore, getDocs, query, where } from "firebase/firestore";
 import { firebaseConfig } from "@/app/constants/firebaseconstants";
 import { initializeApp } from "firebase/app";
+import { Spinner } from "@material-tailwind/react";
 
 const app = initializeApp(firebaseConfig);
 
@@ -72,8 +73,8 @@ const WithPrivateRoute = <P extends object>(WrappedComponent: ComponentType<P>) 
     // Only render the component if the user is authenticated
     if (!currentUser) {
       return (
-        <section className="grid text-center h-screen items-center p-8">
-          <div>Loading ... </div>
+        <section className="grid text-center h-screen items-center p-8 justify-center">
+          <Spinner className="h-14 w-14" />
         </section>
       )
     }

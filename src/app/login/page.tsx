@@ -8,6 +8,7 @@ import { initializeApp } from "firebase/app";
 import { getAuth, signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword } from "firebase/auth";
 import { collection, addDoc, getFirestore, getDocs, query, where } from "firebase/firestore";
 import { AuthContext } from "@/app/components/auth/auth";
+import { Spinner } from "@material-tailwind/react";
 import { firebaseConfig } from "@/app/constants/firebaseconstants";
 import Link from 'next/link';
 import { useForm, SubmitHandler } from "react-hook-form"
@@ -17,6 +18,7 @@ import {
   DialogBody,
   DialogFooter,
 } from "@material-tailwind/react";
+import { useThemeDetector } from "../utilities/utilities";
 
 const app = initializeApp(firebaseConfig);
 const provider = new GoogleAuthProvider();
@@ -41,6 +43,7 @@ export default function LoginPage() {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(!open);
   const [modalMessage, setModalMessage] = useState('')
+  const isDarkTheme = useThemeDetector();
 
   const {
     register,
@@ -121,17 +124,17 @@ export default function LoginPage() {
     }
   }
 
-  if(loading){
+  // if(loading){
+  //   return (
+  //     <section className="grid text-center h-screen items-center p-8 justify-center">
+  //       <Spinner className="h-14 w-14" />
+  //     </section>
+  //   )
+  // }
+  if (authenticated || loading) {
     return (
-      <section className="grid text-center h-screen items-center p-8">
-        <div>Loading ... </div>
-      </section>
-    )
-  }
-  if (authenticated) {
-    return (
-      <section className="grid text-center h-screen items-center p-8">
-        <div>Redirecting ... </div>
+      <section className="grid text-center h-screen items-center p-8 justify-center">
+        <Spinner className="h-14 w-14" />
       </section>
     )
   }
@@ -147,6 +150,7 @@ export default function LoginPage() {
 
           <div className="w-full mb-2">
             <Input label="Email" type="email" 
+              color={isDarkTheme ? "white":"gray"}
               {...register("email",
                 {required: "Email is required",
                   pattern: {
@@ -159,6 +163,7 @@ export default function LoginPage() {
           </div>
           <div className="w-full mt-4">
             <Input label="Password" 
+              color={isDarkTheme ? "white":"gray"}
               type={passwordShown ? "text" : "password"}
               {...register("password",
               {required: "Password is required",
@@ -167,16 +172,16 @@ export default function LoginPage() {
               icon={
                 <i onClick={togglePasswordVisiblity}>
                   {passwordShown ? (
-                    <EyeIcon className="h-5 w-5" />
+                    <EyeIcon className="h-5 w-5 dark:text-white" />
                   ) : (
-                    <EyeSlashIcon className="h-5 w-5" />
+                    <EyeSlashIcon className="h-5 w-5 dark:text-white" />
                   )}
                 </i>
               }/>
             {errors.password && <p role="alert" className="text-sm text-red-400">{errors.password.message}</p>}
           </div>
           <Button color="gray" size="lg"
-            className="mt-6 flex h-12 items-center justify-center gap-2"
+            className="mt-6 flex h-12 items-center justify-center gap-2 dark:bg-white dark:text-black"
             disabled={isSubmitting}
             fullWidth type="submit">
             {isSubmitting ? "Submitting..." :"Login"}
@@ -195,13 +200,13 @@ export default function LoginPage() {
           <Typography
             variant="small"
             color="gray"
-            className="!mt-4 text-center font-normal"
+            className="!mt-4 text-center font-normal dark:text-gray-500"
           >
             Not registered?{" "}
             <Link
               key="register"
               href="/register"
-              className="font-medium text-gray-900"
+              className="font-medium text-gray-900 dark:text-white"
             >
               Create account
             </Link>

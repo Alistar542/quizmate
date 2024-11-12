@@ -18,6 +18,7 @@ import {
   Input, 
   Button
 } from "@material-tailwind/react";
+import { useThemeDetector } from "../utilities/utilities";
 
 const app = initializeApp(firebaseConfig);
 
@@ -36,6 +37,7 @@ export default function RegistrationPage() {
   const [modalMessage, setModalMessage] = useState('')
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(!open);
+  const isDarkTheme = useThemeDetector();
 
   const [openSuccessModal, setopenSuccessModal] = useState(false);
   const handleSuccessOpen = () => {
@@ -130,6 +132,7 @@ export default function RegistrationPage() {
 
           <div className="w-full">
             <Input label="Username"
+              color={isDarkTheme ? "white":"gray"}
               {...register("username",
                 {
                   required: "Username is required",
@@ -146,6 +149,7 @@ export default function RegistrationPage() {
           </div>
           <div className="w-full mt-4">
             <Input label="Email" type="email"
+              color={isDarkTheme ? "white":"gray"}
               {...register("email",
                 {
                   required: "Email is required",
@@ -158,6 +162,7 @@ export default function RegistrationPage() {
           </div>
           <div className="w-full mt-4">
             <Input label="Password"
+              color={isDarkTheme ? "white":"gray"}
               type={passwordShown ? "text" : "password"}
               {...register("password",
                 {
@@ -182,16 +187,18 @@ export default function RegistrationPage() {
               icon={
                 <i onClick={togglePasswordVisiblity}>
                   {passwordShown ? (
-                    <EyeIcon className="h-5 w-5" />
+                    <EyeIcon className="h-5 w-5 dark:text-white" />
                   ) : (
-                    <EyeSlashIcon className="h-5 w-5" />
+                    <EyeSlashIcon className="h-5 w-5 dark:text-white" />
                   )}
                 </i>
               } />
             {errors.password && <p role="alert" className="text-sm text-red-400">{errors.password.message}</p>}
           </div>
           <div className="w-full mt-4">
-            <Input label="Repeat Password" type="password"
+            <Input label="Repeat Password" 
+              type="password"
+              color={isDarkTheme ? "white":"gray"}
               {...register("repeatPassword",
                 {
                   required: "This field is required",
@@ -211,7 +218,7 @@ export default function RegistrationPage() {
           </div>
 
           <Button color="gray" size="lg"
-            className="mt-6 flex h-12 items-center justify-center gap-2"
+            className="mt-6 flex h-12 items-center justify-center gap-2 dark:bg-white dark:text-black"
             type="submit"
             disabled={isSubmitting}
             fullWidth>
@@ -221,13 +228,13 @@ export default function RegistrationPage() {
           <Typography
             variant="small"
             color="gray"
-            className="!mt-4 text-center font-normal"
+            className="!mt-4 text-center font-normal dark:text-gray-500"
           >
             Already registered?{" "}
             <Link
               key="login"
               href="/login"
-              className="font-medium text-gray-900"
+              className="font-medium text-gray-900  dark:text-white"
             >
               Sign in
             </Link>

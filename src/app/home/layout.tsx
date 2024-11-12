@@ -39,7 +39,7 @@ function StickyNavbar ({ children }: { children: React.ReactNode }) {
                 as="li"
                 variant="small"
                 color="blue-gray"
-                className="p-1 font-normal"
+                className="p-1 font-normal dark:text-white"
             >
                 <Link
                     key="questions"
@@ -53,7 +53,7 @@ function StickyNavbar ({ children }: { children: React.ReactNode }) {
                 as="li"
                 variant="small"
                 color="blue-gray"
-                className="p-1 font-normal"
+                className="p-1 font-normal dark:text-white"
             >
                 <a href="#" className="flex items-center">
                     Leaderboard
@@ -63,7 +63,7 @@ function StickyNavbar ({ children }: { children: React.ReactNode }) {
                 as="li"
                 variant="small"
                 color="blue-gray"
-                className="p-1 font-normal"
+                className="p-1 font-normal dark:text-white"
             >
                 <Link
                     key="discuss"
@@ -78,12 +78,12 @@ function StickyNavbar ({ children }: { children: React.ReactNode }) {
 
     return (
         <div className=" h-full w-full ">
-            <Navbar className="sticky top-0 z-10 h-max max-w-full rounded-none px-4 py-2 lg:px-8 lg:py-4">
+            <Navbar className="sticky top-0 z-10 h-max max-w-full rounded-none px-4 py-2 lg:px-8 lg:py-4 dark:bg-gray-600 dark:border-gray-500">
                 <div className="flex items-center justify-between text-blue-gray-900">
                     <Typography
                         as="a"
                         href="#"
-                        className="mr-4 cursor-pointer py-1.5 font-medium"
+                        className="mr-4 cursor-pointer py-1.5 font-medium dark:text-white"
                     >
                         Quiz mate
                     </Typography>
@@ -101,7 +101,7 @@ function StickyNavbar ({ children }: { children: React.ReactNode }) {
                         </div>
                         <IconButton
                             variant="text"
-                            className="ml-auto h-6 w-6 text-inherit hover:bg-transparent focus:bg-transparent active:bg-transparent lg:hidden"
+                            className="ml-auto h-6 w-6 text-inherit hover:bg-transparent focus:bg-transparent active:bg-transparent lg:hidden dark:text-white"
                             ripple={false}
                             onClick={() => setOpenNav(!openNav)}
                         >
