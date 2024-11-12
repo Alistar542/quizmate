@@ -1,3 +1,4 @@
+"use client"
 import { useState, useEffect } from 'react';
 import {incorrectAnswersGifs, correctAnswerGifs} from '../constants/generalconstants'
 
@@ -14,16 +15,23 @@ export const getRandomCorrectAnswerGif = () => {
 }
 
 export const useThemeDetector = () => {
-    const getCurrentTheme = () => window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const getCurrentTheme = () => {
+        if (typeof window !== "undefined") {
+            return window.matchMedia("(prefers-color-scheme: dark)").matches;
+        }
+        return false;
+    };
     const [isDarkTheme, setIsDarkTheme] = useState(getCurrentTheme());  
     const mqListener = (e => {
         setIsDarkTheme(e.matches);
     });
     
     useEffect(() => {
-      const darkThemeMq = window.matchMedia("(prefers-color-scheme: dark)");
-      darkThemeMq.addListener(mqListener);
-      return () => darkThemeMq.removeListener(mqListener);
+        if (typeof window !== "undefined") {
+            const darkThemeMq = window.matchMedia("(prefers-color-scheme: dark)");
+            darkThemeMq.addListener(mqListener);
+            return () => darkThemeMq.removeListener(mqListener);
+        }
     }, []);
     return isDarkTheme;
 }
