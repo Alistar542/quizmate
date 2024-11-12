@@ -155,7 +155,7 @@ export default function LoginPage() {
                   }
                 })}
             />
-            {errors.email && <p role="alert">{errors.email.message}</p>}
+            {errors.email && <p role="alert" className="text-sm text-red-400">{errors.email.message}</p>}
           </div>
           <div className="w-full mt-4">
             <Input label="Password" 
@@ -173,7 +173,7 @@ export default function LoginPage() {
                   )}
                 </i>
               }/>
-            {errors.password && <p role="alert">{errors.password.message}</p>}
+            {errors.password && <p role="alert" className="text-sm text-red-400">{errors.password.message}</p>}
           </div>
           <Button color="gray" size="lg"
             className="mt-6 flex h-12 items-center justify-center gap-2"
@@ -200,7 +200,7 @@ export default function LoginPage() {
             Not registered?{" "}
             <Link
               key="register"
-              href="/registration"
+              href="/register"
               className="font-medium text-gray-900"
             >
               Create account
