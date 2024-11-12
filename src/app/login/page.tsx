@@ -158,11 +158,21 @@ export default function LoginPage() {
             {errors.email && <p role="alert">{errors.email.message}</p>}
           </div>
           <div className="w-full mt-4">
-            <Input label="Password" type="password" 
+            <Input label="Password" 
+              type={passwordShown ? "text" : "password"}
               {...register("password",
               {required: "Password is required",
                 pattern: { value: /^\S*$/, message: "Spaces not allowed" }
-              })}/>
+              })}
+              icon={
+                <i onClick={togglePasswordVisiblity}>
+                  {passwordShown ? (
+                    <EyeIcon className="h-5 w-5" />
+                  ) : (
+                    <EyeSlashIcon className="h-5 w-5" />
+                  )}
+                </i>
+              }/>
             {errors.password && <p role="alert">{errors.password.message}</p>}
           </div>
           <Button color="gray" size="lg"

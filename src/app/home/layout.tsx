@@ -144,8 +144,8 @@ function StickyNavbar ({ children }: { children: React.ReactNode }) {
                         {/* <Button fullWidth variant="text" size="sm" className="">
                 <span>Log In</span>
               </Button> */}
-                        <Button fullWidth variant="gradient" size="sm" className="">
-                            <span>Profile</span>
+                        <Button fullWidth variant="gradient" size="sm" className="" onClick={handleLogout}>
+                            <span>Logout</span>
                         </Button>
                     </div>
                 </Collapse>
