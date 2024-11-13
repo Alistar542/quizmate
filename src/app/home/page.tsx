@@ -2,7 +2,6 @@
 import { useState, useContext, useEffect, ChangeEvent } from "react";
 import { useRouter } from 'next/navigation'
 import { Typography, Input, Button } from "@material-tailwind/react";
-import { EyeSlashIcon, EyeIcon } from "@heroicons/react/24/solid";
 
 import { initializeApp } from "firebase/app";
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
