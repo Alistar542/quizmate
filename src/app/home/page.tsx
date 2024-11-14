@@ -5,7 +5,7 @@ import { Typography, Input, Button } from "@material-tailwind/react";
 
 import { initializeApp } from "firebase/app";
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
-import { collection, addDoc, getFirestore, getDocs, query, where, updateDoc, doc } from "firebase/firestore";
+import { collection, addDoc, getFirestore, getDocs, query, where, updateDoc, doc, and } from "firebase/firestore";
 import { AuthContext } from "@/app/components/auth/auth";
 import { firebaseConfig } from "@/app/constants/firebaseconstants";
 import {
@@ -77,8 +77,11 @@ export default function HomePage() {
     console.log("inside the main useffect")
     async function getUserDetailsFromFirebase() {
       const db = getFirestore(app);
-      const q = query(collection(db, "users"),
+      console.log(currentUser)
+      const q = query(collection(db, "users"), and(
         where("email", "==", currentUser?.email),
+        where("uid", "==", currentUser?.uid),
+      )
       );
       const docSnap = await getDocs(q);
       if (docSnap.docs.length >= 1) {
@@ -142,7 +145,7 @@ export default function HomePage() {
     <section className="grid text-center h-full items-center p-8">
       <div>
 
-        {currentUser.questionId && currentUser.questionId != ""  && !isLoading?
+        {currentUser.questionId != "" && questionText != ""  && !isLoading?
           <Typography variant="h3" className="mb-2">
             Question no. {currentUser && currentUser.questionId}
           </Typography>

@@ -6,7 +6,7 @@ import { EyeSlashIcon, EyeIcon } from "@heroicons/react/24/solid";
 
 import { initializeApp } from "firebase/app";
 import { getAuth, signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword } from "firebase/auth";
-import { collection, addDoc, getFirestore, getDocs, query, where } from "firebase/firestore";
+import { collection, addDoc, getFirestore, getDocs, query, where, and } from "firebase/firestore";
 import { AuthContext } from "@/app/components/auth/auth";
 import { Spinner } from "@material-tailwind/react";
 import { firebaseConfig } from "@/app/constants/firebaseconstants";
@@ -106,13 +106,14 @@ export default function LoginPage() {
 
   async function getUserDetailsFromFirebase(userInfo: any) {
     const db = getFirestore(app);
-    const q = query(collection(db, "users"), 
-      where("email", "==", userInfo.email),
+    const q = query(collection(db, "users"), and(
+      where("email", "==", userInfo.email),where("uid", "==", userInfo.uid),
+      )
     );
     const docSnap = await getDocs(q);
     if (docSnap.docs.length >= 1) {
       docSnap.forEach((doc) => {
-        let userFromDb = { userId: doc.id, ...doc.data() }
+        let userFromDb = { userId: doc.id, uid:userInfo.uid ,...doc.data() }
         console.log("user from db",userFromDb)
         if(userFromDb) {
           setCurrentUser(userFromDb);

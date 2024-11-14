@@ -114,6 +114,7 @@ export default function RegistrationPage() {
     const userDetailsToSave = {
       email: userInfo.email,
       username: userInfo.username,
+      uid: userInfo.uid,
       questionId: 1,
       clueId: 1,
       questionTimestamp: Date.now()
